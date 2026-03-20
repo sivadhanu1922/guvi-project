@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profile — GUVI</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-logo">G<em>U</em>VI</div>
+    <div class="nav-right">
+      <span class="nav-pill" id="navGreet"></span>
+      <a href="login.html" class="nav-btn" id="navLogout">Sign Out</a>
+    </div>
+  </nav>
+
+  <div class="profile-page">
+
+    <div class="p-topbar">
+      <div>
+        <h1>My Profile</h1>
+        <p>session_id: <span id="sessionToken">—</span></p>
+      </div>
+    </div>
+
+    <div class="p-layout">
+
+      <!-- SIDEBAR -->
+      <div>
+        <div class="p-sidebar-card">
+          <div class="p-avatar-wrap">
+            <div class="p-avatar" id="avatarInitials">?</div>
+            <div class="p-avatar-ring"></div>
+          </div>
+          <div class="p-name" id="sidebarName">Loading...</div>
+          <div class="p-uname" id="sidebarUsername"><span></span>—</div>
+          <div class="p-email-sm" id="sidebarEmail">—</div>
+          <div class="p-online">Online</div>
+          <div class="p-nav">
+            <div class="p-nav-item active">
+              <span>◈</span> My Profile
+            </div>
+            <div class="p-nav-item">
+              <span>⚙</span> Settings
+            </div>
+            <div class="p-nav-item">
+              <span>🔒</span> Security
+            </div>
+          </div>
+          <button class="btn-logout" id="logoutBtn">⏻ &nbsp;Sign Out</button>
+        </div>
+      </div>
+
+      <!-- MAIN -->
+      <div class="p-main">
+
+        <div id="msgProfile" class="alert-box"></div>
+
+        <!-- VIEW MODE -->
+        <div id="viewMode">
+          <div class="p-card">
+            <div class="p-card-head">
+              <div>
+                <div class="p-card-title">Account Information</div>
+                <div class="p-card-sub"></div>
+              </div>
+            </div>
+            <div class="p-fields-grid">
+              <div class="pf-item"><div class="lbl">First Name</div><div class="val" id="v_first_name">—</div></div>
+              <div class="pf-item"><div class="lbl">Last Name</div><div class="val" id="v_last_name">—</div></div>
+              <div class="pf-item"><div class="lbl">Username</div><div class="val" id="v_username">—</div></div>
+              <div class="pf-item"><div class="lbl">Email Address</div><div class="val" id="v_email">—</div></div>
+            </div>
+          </div>
+
+          <div class="p-card">
+            <div class="p-card-head">
+              <div>
+                <div class="p-card-title">Personal Details</div>
+                <div class="p-card-sub"></div>
+              </div>
+              <button class="btn-edit-p" id="editBtn">Edit Profile</button>
+            </div>
+            <div class="p-fields-grid">
+              <div class="pf-item"><div class="lbl">Age</div><div class="val" id="v_age">—</div></div>
+              <div class="pf-item"><div class="lbl">Date of Birth</div><div class="val" id="v_dob">—</div></div>
+              <div class="pf-item"><div class="lbl">Contact</div><div class="val" id="v_contact">—</div></div>
+              <div class="pf-item"><div class="lbl">Gender</div><div class="val" id="v_gender">—</div></div>
+              <div class="pf-item span2"><div class="lbl">Address</div><div class="val" id="v_address">—</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- EDIT MODE -->
+        <div id="editMode" style="display:none;">
+          <div class="p-card">
+            <div class="p-card-head">
+              <div>
+                <div class="p-card-title">Edit Personal Details</div>
+                <div class="p-card-sub">// action: upsert · MongoDB</div>
+              </div>
+            </div>
+            <div class="row g-3">
+              <div class="col-6">
+                <label class="field-label">Age</label>
+                <div class="field-wrap">
+                  <input type="number" class="form-control" id="age" placeholder="25"/>
+                  <span class="f-icon">🎂</span>
+                </div>
+              </div>
+              <div class="col-6">
+                <label class="field-label">Date of Birth</label>
+                <div class="field-wrap">
+                  <input type="date" class="form-control" id="dob" style="padding-left:14px!important"/>
+                  <span class="f-icon" style="left:auto;right:14px;">📅</span>
+                </div>
+              </div>
+              <div class="col-6">
+                <label class="field-label">Contact Number</label>
+                <div class="field-wrap">
+                  <input type="text" class="form-control" id="contact" placeholder="+91 9876543210"/>
+                  <span class="f-icon">📞</span>
+                </div>
+              </div>
+              <div class="col-6">
+                <label class="field-label">Gender</label>
+                <div class="field-wrap">
+                  <select class="form-control" id="gender" style="padding-left:14px!important">
+                    <option value="">Select gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                    <option value="Prefer not to say">Prefer not to say</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-12">
+                <label class="field-label">Address</label>
+                <div class="field-wrap">
+                  <input type="text" class="form-control" id="address" placeholder="12, Anna Nagar, Chennai - 600040"/>
+                  <span class="f-icon">📍</span>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top:20px;">
+              <button class="btn-save-p" id="saveBtn">Save Changes</button>
+              <button class="btn-cancel-p" id="cancelBtn">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+  <script src="js/effects.js"></script>
+  <script src="js/profile.js"></script>
+</body>
+</html>

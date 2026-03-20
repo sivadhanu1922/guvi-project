@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign In — GUVI</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-logo">G<em>U</em>VI</div>
+    <div class="nav-right">
+      <span class="nav-pill">New here?</span>
+      <a href="register.html" class="nav-btn">Register</a>
+    </div>
+  </nav>
+
+  <div class="page-wrap">
+    <div class="auth-split">
+
+      <!-- LEFT DECO -->
+      <div class="auth-deco">
+        <div class="deco-logo">GUVI · Platform</div>
+        <div class="deco-mid">
+          <div class="deco-big-num">02</div>
+          <div class="deco-heading">Welcome<br/><em>back.</em></div>
+          <div class="deco-desc">
+            Your session is protected with Redis on the backend and
+            stored securely in your browser's localStorage.
+            No cookies. No PHP sessions. Just clean, modern auth.
+          </div>
+        </div>
+        <div class="deco-tags">
+          <span class="deco-tag lit">🛡 Secure</span>
+          <span class="deco-tag lit">⚡ Fast Login</span>
+          <span class="deco-tag">localStorage</span>
+          <span class="deco-tag">Redis</span>
+        </div>
+      </div>
+
+      <!-- RIGHT FORM -->
+      <div class="auth-form-panel">
+        <div class="form-eyebrow"> authenticate</div>
+        <div class="form-title">Sign In</div>
+        <div class="form-subtitle">Enter your credentials to access your profile</div>
+
+        <div id="msg" class="alert-box"></div>
+
+        <div class="field">
+          <label class="field-label">Username or Email</label>
+          <div class="field-wrap">
+            <input type="text" class="form-control" id="username" placeholder="johndoe or john@example.com"/>
+            <span class="f-icon">@</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label">Password</label>
+          <div class="field-wrap">
+            <input type="password" class="form-control" id="password" placeholder="••••••••"/>
+            <span class="f-icon">🔑</span>
+          </div>
+        </div>
+
+        <button class="btn-submit" id="loginBtn">Sign In →</button>
+
+        <div class="divider">or</div>
+
+        <div class="auth-footer">
+          Don't have an account? <a href="register.html">Register now</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+  <script src="js/effects.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>
