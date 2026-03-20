@@ -1,9 +1,11 @@
 [phases.setup]
 nixPkgs = ["php82", "php82Packages.composer"]
-nixLibs = []
 
 [phases.install]
 cmds = [
+  "curl -sSLf https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o /usr/local/bin/install-php-extensions",
+  "chmod +x /usr/local/bin/install-php-extensions",
+  "install-php-extensions pdo_mysql mongodb redis",
   "composer install --no-interaction --ignore-platform-reqs"
 ]
 
