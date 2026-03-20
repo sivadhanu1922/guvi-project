@@ -1,8 +1,16 @@
 [phases.setup]
-nixPkgs = ["frankenphp"]
+nixPkgs = ["php82", "php82Extensions.pdo", "php82Extensions.pdo_mysql", "php82Extensions.mongodb", "php82Extensions.redis", "php82Packages.composer"]
 
 [phases.install]
-cmds = ["composer install --no-interaction --ignore-platform-reqs"]
+cmds = [
+  "composer install --no-dev --optimize-autoloader --ignore-platform-reqs"
+]
+
+[phases.build]
+cmds = [
+  "echo 'extension=/nix/store/mybm081wdk14lqdgkah5072hq66j1acr-php-mongodb-1.20.1/lib/php/extensions/mongodb.so' >> /nix/store/a0qcy2m5mqwrlkr3xkza0n2wdmbq8myq-php-with-extensions-8.2.27/lib/php.ini",
+  "echo 'extension=/nix/store/2dhx5979dbd30c1x5ydqvbx7x0czxcz9-php-redis-6.1.0/lib/php/extensions/redis.so' >> /nix/store/a0qcy2m5mqwrlkr3xkza0n2wdmbq8myq-php-with-extensions-8.2.27/lib/php.ini"
+]
 
 [start]
-cmd = "frankenphp php-server --listen 0.0.0.0:$PORT"
+cmd = "php -S 0.0.0.0:$PORT -t ."
