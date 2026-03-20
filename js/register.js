@@ -22,14 +22,13 @@ $(document).ready(function () {
     $.ajax({
       url: "php/register.php",
       type: "POST",
-      contentType: "application/json",
-      data: JSON.stringify({
-        first_name: first_name,
-        last_name:  last_name,
-        username:   username,
-        email:      email,
-        password:   password
-      }),
+      data: {
+  first_name: first_name,
+  last_name:  last_name,
+  username:   username,
+  email:      email,
+  password:   password
+},
       dataType: "json",
       success: function (res) {
         if (res.success) {
