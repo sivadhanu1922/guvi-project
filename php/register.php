@@ -3,13 +3,13 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 require_once '../vendor/autoload.php';
 
-$host = getenv('MYSQLHOST') ?: 'mysql.railway.internal';
-$user = getenv('MYSQLUSER') ?: 'root';
-$pass = getenv('MYSQLPASSWORD') ?: 'GGbxdtChSRHZipDvwMMvfnhOwUDfcUCD';
-$db   = getenv('MYSQLDATABASE') ?: 'railway';
+$host = getenv('MYSQLHOST');
+$user = getenv('MYSQLUSER');
+$pass = getenv('MYSQLPASSWORD');
+$db   = getenv('MYSQLDATABASE');
 $port = getenv('MYSQLPORT') ?: 3306;
 
-$conn = new mysqli($host, $user, $pass, $db,(int) $port);
+$conn = new mysqli($host, $user, $pass, $db, (int)$port);
 if ($conn->connect_error) {
     echo json_encode(["status"=>"error","message"=>"Database connection failed."]);
     exit;
