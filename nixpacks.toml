@@ -1,9 +1,8 @@
 [phases.setup]
-nixPkgs = ["php82", "php82Packages.composer"]
-nixLibs = ["php82Extensions.mysqli", "php82Extensions.pdo_mysql"]
+nixPkgs = ["frankenphp"]
 
 [phases.install]
 cmds = ["composer install --no-interaction --ignore-platform-reqs"]
 
 [start]
-cmd = "php -S 0.0.0.0:$PORT -t ."
+cmd = "frankenphp php-server --listen 0.0.0.0:$PORT"
