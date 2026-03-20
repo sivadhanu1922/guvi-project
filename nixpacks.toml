@@ -1,13 +1,8 @@
 [phases.setup]
-nixPkgs = ["php82", "php82Packages.composer"]
+nixPkgs = ["php82", "php82Packages.composer", "php82Extensions.mysqli", "php82Extensions.pdo", "php82Extensions.pdo_mysql", "php82Extensions.mongodb", "php82Extensions.redis"]
 
 [phases.install]
-cmds = [
-  "curl -sSLf https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o /usr/local/bin/install-php-extensions",
-  "chmod +x /usr/local/bin/install-php-extensions",
-  "install-php-extensions pdo_mysql mongodb redis",
-  "composer install --no-interaction --ignore-platform-reqs"
-]
+cmds = ["composer install --no-interaction --ignore-platform-reqs"]
 
 [start]
 cmd = "php -S 0.0.0.0:$PORT -t ."
