@@ -1,79 +1,77 @@
 <?php
-header("Content-Type: application/json");
-header("Access-Control-Allow-Origin: *");
-require_once '../vendor/autoload.php';
-use Predis\Client as RedisClient;
+/**
+ * login.php
+ * Login + Logout handler.
+ * Session stored in Redis only — no PHP Sessions.
+ */
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
 
-function getRedis() {
-    $url = getenv('REDIS_URL') ?: null;
-    if ($url) return new RedisClient($url);
-    return new RedisClient(['host'=>'127.0.0.1','port'=>6379]);
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(204); exit; }
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    echo json_encode(['success' => false, 'message' => 'Method not allowed.']); exit;
 }
 
-$action = $_POST['action'] ?? 'login';
+require_once 'config.php';
 
-if ($action === 'logout') {
-    $token = $_POST['token'] ?? '';
+$body = file_get_contents('php://input');
+$data = json_decode($body, true);
+if (!$data) { echo json_encode(['success' => false, 'message' => 'Invalid JSON.']); exit; }
+
+// ── LOGOUT ──
+if (isset($data['action']) && $data['action'] === 'logout') {
+    $token = $data['token'] ?? '';
     if ($token) {
-        try { $redis = getRedis(); $redis->del("session:".$token); } catch(Exception $e) {}
+        $redis = getRedis();
+        $redis->del('session:' . $token);
     }
-    echo json_encode(["status"=>"success"]);
-    exit;
+    echo json_encode(['success' => true]); exit;
 }
 
-$host = getenv('MYSQLHOST')     ?: 'localhost';
-$user = getenv('MYSQLUSER')     ?: 'root';
-$pass = getenv('MYSQLPASSWORD') ?: '';
-$db   = getenv('MYSQLDATABASE') ?: 'railway';
-$port = getenv('MYSQLPORT')     ?: 3306;
+// ── LOGIN ──
+$identifier = trim($data['identifier'] ?? $data['username'] ?? '');
+$password   =      $data['password']   ?? '';
 
-try {
-    $pdo = new PDO("mysql:host=$host;port=$port;dbname=$db;charset=utf8", $user, $pass);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (Exception $e) {
-    echo json_encode(["status"=>"error","message"=>"DB error: ".$e->getMessage()]);
-    exit;
+if (!$identifier || !$password) {
+    echo json_encode(['success' => false, 'message' => 'All fields required.']); exit;
 }
 
-$username = trim($_POST['username'] ?? '');
-$password = $_POST['password'] ?? '';
+$pdo = getDB();
 
-if (!$username||!$password) {
-    echo json_encode(["status"=>"error","message"=>"All fields required."]);
-    exit;
-}
-
-$stmt = $pdo->prepare("SELECT id,first_name,last_name,username,email,password FROM users WHERE username=? OR email=?");
-$stmt->execute([$username, $username]);
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
+// ── Fetch user — Prepared Statement ──
+$stmt = $pdo->prepare('SELECT id, first_name, last_name, email, username, password FROM users WHERE email = ? OR username = ? LIMIT 1');
+$stmt->execute([$identifier, $identifier]);
+$user = $stmt->fetch();
 
 if (!$user || !password_verify($password, $user['password'])) {
-    echo json_encode(["status"=>"error","message"=>"Invalid credentials."]);
-    exit;
+    echo json_encode(['success' => false, 'message' => 'Invalid credentials.']); exit;
 }
 
+// ── Generate token ──
 $token = bin2hex(random_bytes(32));
-try {
-    $redis = getRedis();
-    $redis->setex("session:".$token, 86400, json_encode([
-        "user_id"    => $user['id'],
-        "username"   => $user['username'],
-        "email"      => $user['email'],
-        "first_name" => $user['first_name'],
-        "last_name"  => $user['last_name']
-    ]));
-} catch(Exception $e) {
-    echo json_encode(["status"=>"error","message"=>"Session error: ".$e->getMessage()]);
-    exit;
-}
+
+// ── Store in Redis — TTL 7 days ──
+$redis = getRedis();
+$redis->setex(
+    'session:' . $token,
+    604800,
+    json_encode([
+        'user_id'    => $user['id'],
+        'username'   => $user['username'],
+        'email'      => $user['email'],
+        'first_name' => $user['first_name'],
+        'last_name'  => $user['last_name']
+    ])
+);
 
 echo json_encode([
-    "status"     => "success",
-    "token"      => $token,
-    "user_id"    => $user['id'],
-    "username"   => $user['username'],
-    "email"      => $user['email'],
-    "first_name" => $user['first_name'],
-    "last_name"  => $user['last_name']
+    'success'    => true,
+    'token'      => $token,
+    'user_id'    => $user['id'],
+    'username'   => $user['username'],
+    'email'      => $user['email'],
+    'first_name' => $user['first_name'],
+    'last_name'  => $user['last_name']
 ]);
-?>

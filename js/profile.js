@@ -15,66 +15,66 @@ $(document).ready(function () {
 
   // Navbar
   $("#navGreet").text("Hello, " + firstName);
-
-  // Topbar session
   $("#sessionToken").text(token.substring(0, 16) + "...");
 
   // Sidebar
   $("#sidebarName").text(firstName + " " + lastName);
   $("#sidebarUsername").html('<span>@</span>' + username);
   $("#sidebarEmail").text(email);
+  $("#avatarInitials").text((firstName.charAt(0) + lastName.charAt(0)).toUpperCase());
 
-  var initials = (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
-  $("#avatarInitials").text(initials);
-
-  // View fields — account info
+  // Account info view
   $("#v_first_name").text(firstName);
   $("#v_last_name").text(lastName);
   $("#v_username").text("@" + username);
   $("#v_email").text(email);
 
-  // Load MongoDB profile
+  // Load profile from MongoDB via GET
   $.ajax({
-    url: "php/profile.php",
-    type: "POST",
-    data: { action: "get", token: token, user_id: user_id },
+    url: "php/profile.php?token=" + encodeURIComponent(token),
+    type: "GET",
     dataType: "json",
     success: function (res) {
-      if (res.status === "success" && res.profile) {
+      if (res.success && res.profile) {
         var p = res.profile;
-        $("#v_age").text(p.age || "—");
-        $("#v_dob").text(p.dob || "—");
+        $("#v_age").text(p.age     || "—");
+        $("#v_dob").text(p.dob     || "—");
         $("#v_contact").text(p.contact || "—");
-        $("#v_gender").text(p.gender || "—");
+        $("#v_gender").text(p.gender   || "—");
         $("#v_address").text(p.address || "—");
-        $("#age").val(p.age || "");
-        $("#dob").val(p.dob || "");
+        // Pre-fill edit form
+        $("#age").val(p.age     || "");
+        $("#dob").val(p.dob     || "");
         $("#contact").val(p.contact || "");
-        $("#gender").val(p.gender || "");
+        $("#gender").val(p.gender   || "");
         $("#address").val(p.address || "");
+      }
+      if (res.redirect) {
+        localStorage.clear();
+        window.location.href = "login.html";
       }
     },
     error: function () {
-      showMsg("error", "Could not load profile data.");
+      showMsg("error", "// error: could_not_load_profile");
     }
   });
 
-  // Edit
+  // Edit button
   $("#editBtn").click(function () {
     $("#viewMode").hide();
     $("#editMode").fadeIn(200);
   });
 
-  // Cancel
+  // Cancel button
   $("#cancelBtn").click(function () {
     $("#editMode").hide();
     $("#viewMode").fadeIn(200);
   });
 
-  // Save
+  // Save button
   $("#saveBtn").click(function () {
-    var data = {
-      action: "update", token: token, user_id: user_id,
+    var payload = {
+      token:   token,
       age:     $("#age").val().trim(),
       dob:     $("#dob").val(),
       contact: $("#contact").val().trim(),
@@ -82,7 +82,7 @@ $(document).ready(function () {
       address: $("#address").val().trim()
     };
 
-    if (!data.age || !data.dob || !data.contact || !data.gender || !data.address) {
+    if (!payload.age || !payload.dob || !payload.contact || !payload.gender || !payload.address) {
       showMsg("error", "// error: all_fields_required");
       return;
     }
@@ -92,20 +92,21 @@ $(document).ready(function () {
     $.ajax({
       url: "php/profile.php",
       type: "POST",
-      data: data,
+      contentType: "application/json",
+      data: JSON.stringify(payload),
       dataType: "json",
       success: function (res) {
-        if (res.status === "success") {
-          $("#v_age").text(data.age);
-          $("#v_dob").text(data.dob);
-          $("#v_contact").text(data.contact);
-          $("#v_gender").text(data.gender);
-          $("#v_address").text(data.address);
+        if (res.success) {
+          $("#v_age").text(payload.age);
+          $("#v_dob").text(payload.dob);
+          $("#v_contact").text(payload.contact);
+          $("#v_gender").text(payload.gender);
+          $("#v_address").text(payload.address);
           showMsg("success", "// profile_updated successfully");
           $("#editMode").hide();
           $("#viewMode").fadeIn(200);
         } else {
-          showMsg("error", res.message || "Update failed.");
+          showMsg("error", "// error: " + res.message);
         }
         $("#saveBtn").text("Save Changes").prop("disabled", false);
       },
@@ -121,7 +122,8 @@ $(document).ready(function () {
     $.ajax({
       url: "php/login.php",
       type: "POST",
-      data: { action: "logout", token: token },
+      contentType: "application/json",
+      data: JSON.stringify({ action: "logout", token: token }),
       dataType: "json",
       complete: function () {
         localStorage.clear();
@@ -130,7 +132,7 @@ $(document).ready(function () {
     });
   }
   $("#logoutBtn").click(doLogout);
-  $("#navLogout").click(function(e){ e.preventDefault(); doLogout(); });
+  $("#navLogout").click(function (e) { e.preventDefault(); doLogout(); });
 
   function showMsg(type, text) {
     var el = $("#msgProfile");

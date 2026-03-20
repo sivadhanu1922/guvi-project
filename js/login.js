@@ -6,11 +6,11 @@ $(document).ready(function () {
   }
 
   $("#loginBtn").click(function () {
-    var username = $("#username").val().trim();
-    var password = $("#password").val();
+    var identifier = $("#username").val().trim();
+    var password   = $("#password").val();
 
-    if (!username || !password) {
-      showMsg("error", "Please fill in all fields.");
+    if (!identifier || !password) {
+      showMsg("error", "// error: all_fields_required");
       return;
     }
 
@@ -19,41 +19,42 @@ $(document).ready(function () {
     $.ajax({
       url: "php/login.php",
       type: "POST",
-      data: {
-        username: username,
-        password: password
-      },
+      contentType: "application/json",
+      data: JSON.stringify({
+        identifier: identifier,
+        password:   password
+      }),
       dataType: "json",
       success: function (res) {
-        if (res.status === "success") {
-          // Store token and user info in localStorage
-          localStorage.setItem("guvi_token", res.token);
-          localStorage.setItem("guvi_user_id", res.user_id);
-          localStorage.setItem("guvi_username", res.username);
-          localStorage.setItem("guvi_email", res.email);
+        if (res.success) {
+          localStorage.setItem("guvi_token",      res.token);
+          localStorage.setItem("guvi_user_id",    res.user_id);
+          localStorage.setItem("guvi_username",   res.username);
+          localStorage.setItem("guvi_email",      res.email);
           localStorage.setItem("guvi_first_name", res.first_name);
-          localStorage.setItem("guvi_last_name", res.last_name);
+          localStorage.setItem("guvi_last_name",  res.last_name);
 
-          showMsg("success", "Login successful! Redirecting...");
+          showMsg("success", "// login_success → redirecting...");
           setTimeout(function () {
             window.location.href = "profile.html";
           }, 1000);
         } else {
-          showMsg("error", res.message);
-          $("#loginBtn").text("Sign In").prop("disabled", false);
+          showMsg("error", "// error: " + res.message);
+          $("#loginBtn").text("Sign In →").prop("disabled", false);
         }
       },
       error: function () {
-        showMsg("error", "Server error. Please try again.");
-        $("#loginBtn").text("Sign In").prop("disabled", false);
+        showMsg("error", "// error: server_unreachable");
+        $("#loginBtn").text("Sign In →").prop("disabled", false);
       }
     });
   });
 
   function showMsg(type, text) {
     var el = $("#msg");
-    el.removeClass("alert-success alert-error").addClass(type === "success" ? "alert-success" : "alert-error");
-    el.text(text).show();
+    el.removeClass("alert-success alert-error")
+      .addClass(type === "success" ? "alert-success" : "alert-error")
+      .text(text).show();
   }
 
 });
