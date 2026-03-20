@@ -1,13 +1,5 @@
 [phases.setup]
-nixPkgs = [
-  "php82",
-  "php82Extensions.mysqli",
-  "php82Extensions.pdo",
-  "php82Extensions.pdo_mysql",
-  "php82Extensions.mongodb",
-  "php82Extensions.redis",
-  "php82Packages.composer"
-]
+nixPkgs = ["php82", "php82Extensions.pdo", "php82Extensions.pdo_mysql", "php82Extensions.mongodb", "php82Extensions.redis", "php82Packages.composer"]
 
 [phases.install]
 cmds = ["composer install --no-interaction --ignore-platform-reqs"]

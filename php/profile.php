@@ -9,21 +9,31 @@ $token   = $_POST['token']   ?? '';
 $user_id = $_POST['user_id'] ?? '';
 $action  = $_POST['action']  ?? 'get';
 
-if (!$token||!$user_id) { echo json_encode(["status"=>"error","message"=>"Unauthorized."]); exit; }
-
-try {
-    $redis = new RedisClient();
-    $session = $redis->get("session:".$token);
-    if (!$session) { echo json_encode(["status"=>"error","message"=>"Session expired."]); exit; }
-} catch(Exception $e) {
-    echo json_encode(["status"=>"error","message"=>"Session error: ".$e->getMessage()]); exit;
+if (!$token||!$user_id) {
+    echo json_encode(["status"=>"error","message"=>"Unauthorized."]);
+    exit;
 }
 
 try {
-    $mongo = new MongoClient("mongodb://127.0.0.1:27017");
+    $redisUrl = getenv('REDIS_URL') ?: null;
+    $redis = $redisUrl ? new RedisClient($redisUrl) : new RedisClient(['host'=>'127.0.0.1','port'=>6379]);
+    $session = $redis->get("session:".$token);
+    if (!$session) {
+        echo json_encode(["status"=>"error","message"=>"Session expired."]);
+        exit;
+    }
+} catch(Exception $e) {
+    echo json_encode(["status"=>"error","message"=>"Session error: ".$e->getMessage()]);
+    exit;
+}
+
+try {
+    $mongoUri = getenv('MONGO_URL') ?: getenv('MONGODB_URL') ?: 'mongodb://127.0.0.1:27017';
+    $mongo = new MongoClient($mongoUri);
     $col   = $mongo->guvi_db->profiles;
 } catch(Exception $e) {
-    echo json_encode(["status"=>"error","message"=>"MongoDB error: ".$e->getMessage()]); exit;
+    echo json_encode(["status"=>"error","message"=>"MongoDB error: ".$e->getMessage()]);
+    exit;
 }
 
 if ($action === 'get') {
@@ -47,7 +57,8 @@ if ($action === 'get') {
     $address = trim($_POST['address'] ?? '');
 
     if (!$age||!$dob||!$contact||!$gender||!$address) {
-        echo json_encode(["status"=>"error","message"=>"All fields required."]); exit;
+        echo json_encode(["status"=>"error","message"=>"All fields required."]);
+        exit;
     }
 
     $col->updateOne(
