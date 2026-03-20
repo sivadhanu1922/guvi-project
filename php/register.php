@@ -3,17 +3,15 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 require_once '../vendor/autoload.php';
 
-$host = getenv('MYSQLHOST')     ?: 'localhost';
-$user = getenv('MYSQLUSER')     ?: 'root';
-$pass = getenv('MYSQLPASSWORD') ?: '';
-$db   = getenv('MYSQLDATABASE') ?: 'railway';
-$port = getenv('MYSQLPORT')     ?: 3306;
+$host = getenv('MYSQLHOST');
+$user = getenv('MYSQLUSER');
+$pass = getenv('MYSQLPASSWORD');
+$db   = getenv('MYSQLDATABASE');
+$port = getenv('MYSQLPORT') ?: 3306;
 
-try {
-    $pdo = new PDO("mysql:host=$host;port=$port;dbname=$db;charset=utf8", $user, $pass);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (Exception $e) {
-    echo json_encode(["status"=>"error","message"=>"Database connection failed: ".$e->getMessage()]);
+$conn = new mysqli($host, $user, $pass, $db, (int)$port);
+if ($conn->connect_error) {
+    echo json_encode(["status"=>"error","message"=>"Database connection failed."]);
     exit;
 }
 
@@ -32,19 +30,24 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     exit;
 }
 
-$stmt = $pdo->prepare("SELECT id FROM users WHERE username=? OR email=?");
-$stmt->execute([$username, $email]);
-if ($stmt->rowCount() > 0) {
+$stmt = $conn->prepare("SELECT id FROM users WHERE username=? OR email=?");
+$stmt->bind_param("ss", $username, $email);
+$stmt->execute();
+$stmt->store_result();
+if ($stmt->num_rows > 0) {
     echo json_encode(["status"=>"error","message"=>"Username or email already exists."]);
-    exit;
+    $stmt->close(); $conn->close(); exit;
 }
+$stmt->close();
 
 $hashed = password_hash($password, PASSWORD_BCRYPT);
-$stmt = $pdo->prepare("INSERT INTO users (first_name,last_name,username,email,password) VALUES (?,?,?,?,?)");
+$stmt = $conn->prepare("INSERT INTO users (first_name,last_name,username,email,password) VALUES (?,?,?,?,?)");
+$stmt->bind_param("sssss", $first_name, $last_name, $username, $email, $hashed);
 
-if ($stmt->execute([$first_name, $last_name, $username, $email, $hashed])) {
+if ($stmt->execute()) {
     echo json_encode(["status"=>"success","message"=>"Registration successful."]);
 } else {
     echo json_encode(["status"=>"error","message"=>"Registration failed."]);
 }
+$stmt->close(); $conn->close();
 ?>
