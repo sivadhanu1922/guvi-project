@@ -2,5 +2,10 @@
   "require": {
     "predis/predis": "^2.0",
     "mongodb/mongodb": "^2.0"
+  },
+  "config": {
+    "platform": {
+      "ext-mongodb": "2.0.0"
+    }
   }
 }
