@@ -15,7 +15,13 @@ if ($action === 'logout') {
     exit;
 }
 
-$conn = new mysqli("localhost","root","","guvi_db");
+$host = getenv('MYSQLHOST') ?: 'mysql.railway.internal';
+$user = getenv('MYSQLUSER') ?: 'root';
+$pass = getenv('MYSQLPASSWORD') ?: 'GGbxdtChSRHZipDvwMMvfnhOwUDfcUCD';
+$db   = getenv('MYSQLDATABASE') ?: 'railway';
+$port = getenv('MYSQLPORT') ?: 3306;
+
+$conn = new mysqli($host, $user, $pass, $db,(int) $port);
 if ($conn->connect_error) { echo json_encode(["status"=>"error","message"=>"DB error."]); exit; }
 
 $username = trim($_POST['username'] ?? '');

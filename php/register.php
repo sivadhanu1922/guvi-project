@@ -3,7 +3,13 @@ header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 require_once '../vendor/autoload.php';
 
-$conn = new mysqli("localhost", "root", "", "guvi_db");
+$host = getenv('MYSQLHOST') ?: 'mysql.railway.internal';
+$user = getenv('MYSQLUSER') ?: 'root';
+$pass = getenv('MYSQLPASSWORD') ?: 'GGbxdtChSRHZipDvwMMvfnhOwUDfcUCD';
+$db   = getenv('MYSQLDATABASE') ?: 'railway';
+$port = getenv('MYSQLPORT') ?: 3306;
+
+$conn = new mysqli($host, $user, $pass, $db,(int) $port);
 if ($conn->connect_error) {
     echo json_encode(["status"=>"error","message"=>"Database connection failed."]);
     exit;
