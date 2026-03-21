@@ -4,157 +4,177 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Profile — GUVI</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
   <link rel="stylesheet" href="css/style.css"/>
 </head>
 <body>
+
   <nav class="navbar">
-    <div class="nav-logo">G<em>U</em>VI</div>
-    <div class="nav-right">
-      <span class="nav-pill" id="navGreet"></span>
-      <a href="#" class="nav-btn" id="navLogout">Sign Out</a>
-    </div>
+    <div class="nav-brand">G<span>U</span>VI</div>
+    <span id="navGreet" style="font-size:13px;color:#8b93a5;"></span>
   </nav>
 
   <div class="profile-page">
-    <div class="p-topbar">
-      <div>
-        <h1>My Profile</h1>
-        <p>session_id: <span id="sessionToken">—</span></p>
-      </div>
-    </div>
 
-    <div class="p-layout">
+    <div id="msgProfile" class="alert"></div>
+
+    <div class="profile-layout">
+
       <!-- SIDEBAR -->
-      <div>
-        <div class="p-sidebar-card">
-          <div class="p-avatar-wrap">
-            <div class="p-avatar" id="avatarInitials">?</div>
-            <div class="p-avatar-ring"></div>
+      <div class="sidebar">
+        <div class="sidebar-avatar" id="avatarInitials">?</div>
+        <div class="sidebar-name" id="sidebarName">—</div>
+        <div class="sidebar-username" id="sidebarUsername">@—</div>
+        <div class="sidebar-email" id="sidebarEmail">—</div>
+
+        <div class="sidebar-nav">
+          <div class="sidebar-nav-item active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+            My Profile
           </div>
-          <div class="p-name" id="sidebarName">Loading...</div>
-          <div class="p-uname" id="sidebarUsername"><span>@</span>—</div>
-          <div class="p-email-sm" id="sidebarEmail">—</div>
-          <div class="p-online">Online</div>
-          <div class="p-nav">
-            <div class="p-nav-item active">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-              My Profile
-            </div>
-            <div class="p-nav-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v2m0 16v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M2 12h2m16 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-              Settings
-            </div>
-            <div class="p-nav-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              Security
-            </div>
+          <div class="sidebar-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+            Settings
           </div>
-          <button class="btn-logout" id="logoutBtn">Sign Out</button>
+          <div class="sidebar-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            Security
+          </div>
+        </div>
+
+        <div class="sidebar-logout">
+          <button class="btn btn-danger" id="logoutBtn">Sign Out</button>
         </div>
       </div>
 
       <!-- MAIN -->
-      <div class="p-main">
-        <div id="msgProfile" class="alert-box"></div>
+      <div>
 
         <!-- VIEW MODE -->
         <div id="viewMode">
-          <div class="p-card">
-            <div class="p-card-head">
+          <div class="card">
+            <div class="card-header">
               <div>
-                <div class="p-card-title">Account Information</div>
-                <div class="p-card-sub">// stored_in: MySQL · encrypted_password</div>
+                <div class="card-title">Account Information</div>
+                <div class="card-subtitle">Stored in MySQL</div>
               </div>
             </div>
-            <div class="p-fields-grid">
-              <div class="pf-item"><div class="lbl">First Name</div><div class="val" id="v_first_name">—</div></div>
-              <div class="pf-item"><div class="lbl">Last Name</div><div class="val" id="v_last_name">—</div></div>
-              <div class="pf-item"><div class="lbl">Username</div><div class="val" id="v_username">—</div></div>
-              <div class="pf-item"><div class="lbl">Email</div><div class="val" id="v_email">—</div></div>
+            <div class="field-grid">
+              <div class="field-item">
+                <div class="field-label">First Name</div>
+                <div class="field-value" id="v_first_name">—</div>
+              </div>
+              <div class="field-item">
+                <div class="field-label">Last Name</div>
+                <div class="field-value" id="v_last_name">—</div>
+              </div>
+              <div class="field-item">
+                <div class="field-label">Username</div>
+                <div class="field-value" id="v_username">—</div>
+              </div>
+              <div class="field-item">
+                <div class="field-label">Email</div>
+                <div class="field-value" id="v_email">—</div>
+              </div>
             </div>
           </div>
 
-          <div class="p-card">
-            <div class="p-card-head">
+          <div class="card">
+            <div class="card-header">
               <div>
-                <div class="p-card-title">Personal Details</div>
-                <div class="p-card-sub">// stored_in: MongoDB · profiles_collection</div>
+                <div class="card-title">Personal Details</div>
+                <div class="card-subtitle">Stored in MongoDB</div>
               </div>
-              <button class="btn-edit-p" id="editBtn">Edit Profile</button>
+              <button class="btn btn-outline" id="editBtn" style="width:auto;padding:7px 16px;font-size:13px;">Edit</button>
             </div>
-            <div class="p-fields-grid">
-              <div class="pf-item"><div class="lbl">Age</div><div class="val" id="v_age">—</div></div>
-              <div class="pf-item"><div class="lbl">Date of Birth</div><div class="val" id="v_dob">—</div></div>
-              <div class="pf-item"><div class="lbl">Contact</div><div class="val" id="v_contact">—</div></div>
-              <div class="pf-item"><div class="lbl">Gender</div><div class="val" id="v_gender">—</div></div>
-              <div class="pf-item span2"><div class="lbl">Address</div><div class="val" id="v_address">—</div></div>
+            <div class="field-grid">
+              <div class="field-item">
+                <div class="field-label">Age</div>
+                <div class="field-value" id="v_age">—</div>
+              </div>
+              <div class="field-item">
+                <div class="field-label">Date of Birth</div>
+                <div class="field-value" id="v_dob">—</div>
+              </div>
+              <div class="field-item">
+                <div class="field-label">Contact</div>
+                <div class="field-value" id="v_contact">—</div>
+              </div>
+              <div class="field-item">
+                <div class="field-label">Gender</div>
+                <div class="field-value" id="v_gender">—</div>
+              </div>
+              <div class="field-item full">
+                <div class="field-label">Address</div>
+                <div class="field-value" id="v_address">—</div>
+              </div>
             </div>
           </div>
         </div>
 
         <!-- EDIT MODE -->
         <div id="editMode" style="display:none;">
-          <div class="p-card">
-            <div class="p-card-head">
+          <div class="card">
+            <div class="card-header">
               <div>
-                <div class="p-card-title">Edit Personal Details</div>
-                <div class="p-card-sub">// action: upsert · MongoDB</div>
+                <div class="card-title">Edit Personal Details</div>
+                <div class="card-subtitle">Updates saved to MongoDB</div>
               </div>
             </div>
-            <div class="row g-3">
-              <div class="col-6">
-                <label class="field-label">Age</label>
-                <div class="field-wrap">
-                  <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="#00d2ff" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-                  <input type="number" class="form-control" id="age" placeholder="25"/>
-                </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Age</label>
+                <input type="number" id="age" placeholder="25"/>
               </div>
-              <div class="col-6">
-                <label class="field-label">Date of Birth</label>
-                <div class="field-wrap">
-                  <input type="date" class="form-control" id="dob" style="padding-left:12px!important"/>
-                </div>
-              </div>
-              <div class="col-6">
-                <label class="field-label">Contact Number</label>
-                <div class="field-wrap">
-                  <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="#00d2ff" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 3.08 4.18 2 2 0 0 1 5.07 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L9.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                  <input type="text" class="form-control" id="contact" placeholder="+91 9876543210"/>
-                </div>
-              </div>
-              <div class="col-6">
-                <label class="field-label">Gender</label>
-                <div class="field-wrap">
-                  <select class="form-control" id="gender" style="padding-left:12px!important">
-                    <option value="">Select gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
-                    <option value="Prefer not to say">Prefer not to say</option>
-                  </select>
-                </div>
-              </div>
-              <div class="col-12">
-                <label class="field-label">Address</label>
-                <div class="field-wrap">
-                  <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="#00d2ff" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                  <input type="text" class="form-control" id="address" placeholder="12, Anna Nagar, Chennai"/>
-                </div>
+              <div class="form-group">
+                <label>Date of Birth</label>
+                <input type="date" id="dob"/>
               </div>
             </div>
-            <div style="margin-top:18px;">
-              <button class="btn-save-p" id="saveBtn">Save Changes</button>
-              <button class="btn-cancel-p" id="cancelBtn">Cancel</button>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Contact Number</label>
+                <input type="text" id="contact" placeholder="+91 9876543210"/>
+              </div>
+              <div class="form-group">
+                <label>Gender</label>
+                <select id="gender">
+                  <option value="">Select</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                  <option value="Prefer not to say">Prefer not to say</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Address</label>
+              <input type="text" id="address" placeholder="12, Anna Nagar, Chennai"/>
+            </div>
+
+            <div class="edit-actions">
+              <button class="btn" id="saveBtn" style="width:auto;padding:10px 24px;">Save Changes</button>
+              <button class="btn btn-outline" id="cancelBtn" style="width:auto;padding:10px 24px;">Cancel</button>
             </div>
           </div>
         </div>
+
       </div>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-  <script src="js/effects.js"></script>
   <script src="js/profile.js"></script>
 </body>
 </html>

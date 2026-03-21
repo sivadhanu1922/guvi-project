@@ -1,118 +1,100 @@
 $(document).ready(function () {
 
-  var token   = localStorage.getItem("guvi_token");
-  var user_id = localStorage.getItem("guvi_user_id");
+  var token      = localStorage.getItem('guvi_token');
+  var user_id    = localStorage.getItem('guvi_user_id');
+  var firstName  = localStorage.getItem('guvi_first_name') || '';
+  var lastName   = localStorage.getItem('guvi_last_name')  || '';
+  var username   = localStorage.getItem('guvi_username')   || '';
+  var email      = localStorage.getItem('guvi_email')      || '';
 
   if (!token || !user_id) {
-    window.location.href = "login.html";
+    window.location.href = 'login.html';
     return;
   }
 
-  var firstName = localStorage.getItem("guvi_first_name") || "";
-  var lastName  = localStorage.getItem("guvi_last_name")  || "";
-  var username  = localStorage.getItem("guvi_username")   || "";
-  var email     = localStorage.getItem("guvi_email")      || "";
+  // Fill sidebar
+  $('#navGreet').text('Hello, ' + firstName);
+  $('#sidebarName').text(firstName + ' ' + lastName);
+  $('#sidebarUsername').text('@' + username);
+  $('#sidebarEmail').text(email);
+  $('#avatarInitials').text((firstName.charAt(0) + lastName.charAt(0)).toUpperCase());
 
-  // Navbar
-  $("#navGreet").text("Hello, " + firstName);
-  $("#sessionToken").text(token.substring(0, 16) + "...");
+  // Fill account info
+  $('#v_first_name').text(firstName);
+  $('#v_last_name').text(lastName);
+  $('#v_username').text('@' + username);
+  $('#v_email').text(email);
 
-  // Sidebar
-  $("#sidebarName").text(firstName + " " + lastName);
-  $("#sidebarUsername").html('<span>@</span>' + username);
-  $("#sidebarEmail").text(email);
-  $("#avatarInitials").text((firstName.charAt(0) + lastName.charAt(0)).toUpperCase());
-
-  // Account info view
-  $("#v_first_name").text(firstName);
-  $("#v_last_name").text(lastName);
-  $("#v_username").text("@" + username);
-  $("#v_email").text(email);
-
-  // Load profile from MongoDB via GET
+  // Load profile from MongoDB
   $.ajax({
-    url: "php/profile.php?token=" + encodeURIComponent(token),
-    type: "GET",
-    dataType: "json",
+    url: 'php/profile.php?token=' + encodeURIComponent(token),
+    type: 'GET',
+    dataType: 'json',
     success: function (res) {
+      if (res.redirect) { localStorage.clear(); window.location.href = 'login.html'; return; }
       if (res.success && res.profile) {
         var p = res.profile;
-        $("#v_age").text(p.age     || "—");
-        $("#v_dob").text(p.dob     || "—");
-        $("#v_contact").text(p.contact || "—");
-        $("#v_gender").text(p.gender   || "—");
-        $("#v_address").text(p.address || "—");
-        // Pre-fill edit form
-        $("#age").val(p.age     || "");
-        $("#dob").val(p.dob     || "");
-        $("#contact").val(p.contact || "");
-        $("#gender").val(p.gender   || "");
-        $("#address").val(p.address || "");
-      }
-      if (res.redirect) {
-        localStorage.clear();
-        window.location.href = "login.html";
+        $('#v_age').text(p.age     || '—');
+        $('#v_dob').text(p.dob     || '—');
+        $('#v_contact').text(p.contact || '—');
+        $('#v_gender').text(p.gender   || '—');
+        $('#v_address').text(p.address || '—');
+        $('#age').val(p.age     || '');
+        $('#dob').val(p.dob     || '');
+        $('#contact').val(p.contact || '');
+        $('#gender').val(p.gender   || '');
+        $('#address').val(p.address || '');
       }
     },
-    error: function () {
-      showMsg("error", "// error: could_not_load_profile");
-    }
+    error: function () { showMsg('error', 'Could not load profile data.'); }
   });
 
-  // Edit button
-  $("#editBtn").click(function () {
-    $("#viewMode").hide();
-    $("#editMode").fadeIn(200);
-  });
+  // Edit / Cancel
+  $('#editBtn').click(function () { $('#viewMode').hide(); $('#editMode').show(); });
+  $('#cancelBtn').click(function () { $('#editMode').hide(); $('#viewMode').show(); });
 
-  // Cancel button
-  $("#cancelBtn").click(function () {
-    $("#editMode").hide();
-    $("#viewMode").fadeIn(200);
-  });
-
-  // Save button
-  $("#saveBtn").click(function () {
+  // Save
+  $('#saveBtn').click(function () {
     var payload = {
       token:   token,
-      age:     $("#age").val().trim(),
-      dob:     $("#dob").val(),
-      contact: $("#contact").val().trim(),
-      gender:  $("#gender").val(),
-      address: $("#address").val().trim()
+      age:     $('#age').val().trim(),
+      dob:     $('#dob').val(),
+      contact: $('#contact').val().trim(),
+      gender:  $('#gender').val(),
+      address: $('#address').val().trim()
     };
 
     if (!payload.age || !payload.dob || !payload.contact || !payload.gender || !payload.address) {
-      showMsg("error", "// error: all_fields_required");
+      showMsg('error', 'Please fill in all fields.');
       return;
     }
 
-    $("#saveBtn").text("Saving...").prop("disabled", true);
+    $('#saveBtn').text('Saving...').prop('disabled', true);
 
     $.ajax({
-      url: "php/profile.php",
-      type: "POST",
-      contentType: "application/json",
+      url: 'php/profile.php',
+      type: 'POST',
+      contentType: 'application/json',
       data: JSON.stringify(payload),
-      dataType: "json",
+      dataType: 'json',
       success: function (res) {
         if (res.success) {
-          $("#v_age").text(payload.age);
-          $("#v_dob").text(payload.dob);
-          $("#v_contact").text(payload.contact);
-          $("#v_gender").text(payload.gender);
-          $("#v_address").text(payload.address);
-          showMsg("success", "// profile_updated successfully");
-          $("#editMode").hide();
-          $("#viewMode").fadeIn(200);
+          $('#v_age').text(payload.age);
+          $('#v_dob').text(payload.dob);
+          $('#v_contact').text(payload.contact);
+          $('#v_gender').text(payload.gender);
+          $('#v_address').text(payload.address);
+          showMsg('success', 'Profile updated successfully.');
+          $('#editMode').hide();
+          $('#viewMode').show();
         } else {
-          showMsg("error", "// error: " + res.message);
+          showMsg('error', res.message || 'Update failed.');
         }
-        $("#saveBtn").text("Save Changes").prop("disabled", false);
+        $('#saveBtn').text('Save Changes').prop('disabled', false);
       },
       error: function () {
-        showMsg("error", "// error: server_unreachable");
-        $("#saveBtn").text("Save Changes").prop("disabled", false);
+        showMsg('error', 'Server error. Please try again.');
+        $('#saveBtn').text('Save Changes').prop('disabled', false);
       }
     });
   });
@@ -120,26 +102,20 @@ $(document).ready(function () {
   // Logout
   function doLogout() {
     $.ajax({
-      url: "php/login.php",
-      type: "POST",
-      contentType: "application/json",
-      data: JSON.stringify({ action: "logout", token: token }),
-      dataType: "json",
-      complete: function () {
-        localStorage.clear();
-        window.location.href = "login.html";
-      }
+      url: 'php/login.php',
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({ action: 'logout', token: token }),
+      complete: function () { localStorage.clear(); window.location.href = 'login.html'; }
     });
   }
-  $("#logoutBtn").click(doLogout);
-  $("#navLogout").click(function (e) { e.preventDefault(); doLogout(); });
+  $('#logoutBtn').click(doLogout);
 
   function showMsg(type, text) {
-    var el = $("#msgProfile");
-    el.removeClass("alert-success alert-error")
-      .addClass(type === "success" ? "alert-success" : "alert-error")
-      .text(text).show();
-    setTimeout(function () { el.fadeOut(); }, 3500);
+    $('#msgProfile').removeClass('alert-success alert-error show')
+      .addClass('alert-' + (type === 'success' ? 'success' : 'error') + ' show')
+      .text(text);
+    setTimeout(function () { $('#msgProfile').removeClass('show'); }, 3000);
   }
 
 });
