@@ -1,12 +1,13 @@
 $(document).ready(function () {
 
+  // Redirect if already logged in
   if (localStorage.getItem('guvi_token')) {
     window.location.href = 'profile.html';
   }
 
   $('#loginBtn').click(function () {
-    var identifier = $('#username').val().trim();
-    var password   = $('#password').val();
+    const identifier = $('#username').val().trim();
+    const password   = $('#password').val();
 
     if (!identifier || !password) {
       showMsg('error', 'Please fill in all fields.');
@@ -23,12 +24,8 @@ $(document).ready(function () {
       dataType: 'json',
       success: function (res) {
         if (res.success) {
-          localStorage.setItem('guvi_token',      res.token);
-          localStorage.setItem('guvi_user_id',    res.user_id);
-          localStorage.setItem('guvi_username',   res.username);
-          localStorage.setItem('guvi_email',      res.email);
-          localStorage.setItem('guvi_first_name', res.first_name);
-          localStorage.setItem('guvi_last_name',  res.last_name);
+          // Store only the token — everything else comes from DB
+          localStorage.setItem('guvi_token', res.token);
           window.location.href = 'profile.html';
         } else {
           showMsg('error', res.message || 'Invalid credentials.');
@@ -43,7 +40,8 @@ $(document).ready(function () {
   });
 
   function showMsg(type, text) {
-    $('#msg').removeClass('alert-success alert-error show')
+    $('#msg')
+      .removeClass('alert-success alert-error show')
       .addClass('alert-' + (type === 'success' ? 'success' : 'error') + ' show')
       .text(text);
   }

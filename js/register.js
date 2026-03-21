@@ -1,12 +1,12 @@
 $(document).ready(function () {
 
   $('#registerBtn').click(function () {
-    var first_name = $('#first_name').val().trim();
-    var last_name  = $('#last_name').val().trim();
-    var username   = $('#username').val().trim();
-    var email      = $('#email').val().trim();
-    var password   = $('#password').val();
-    var confirm    = $('#confirm_password').val();
+    const first_name = $('#first_name').val().trim();
+    const last_name  = $('#last_name').val().trim();
+    const username   = $('#username').val().trim();
+    const email      = $('#email').val().trim();
+    const password   = $('#password').val();
+    const confirm    = $('#confirm_password').val();
 
     if (!first_name || !last_name || !username || !email || !password || !confirm) {
       showMsg('error', 'Please fill in all fields.');
@@ -32,7 +32,7 @@ $(document).ready(function () {
       success: function (res) {
         if (res.success) {
           showMsg('success', 'Account created! Redirecting to login...');
-          setTimeout(function () { window.location.href = 'login.html'; }, 1500);
+          setTimeout(() => { window.location.href = 'login.html'; }, 1500);
         } else {
           showMsg('error', res.message || 'Registration failed.');
           $('#registerBtn').text('Create Account').prop('disabled', false);
@@ -46,7 +46,8 @@ $(document).ready(function () {
   });
 
   function showMsg(type, text) {
-    $('#msg').removeClass('alert-success alert-error show')
+    $('#msg')
+      .removeClass('alert-success alert-error show')
       .addClass('alert-' + (type === 'success' ? 'success' : 'error') + ' show')
       .text(text);
   }

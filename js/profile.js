@@ -1,44 +1,46 @@
 $(document).ready(function () {
 
-  var token      = localStorage.getItem('guvi_token');
-  var user_id    = localStorage.getItem('guvi_user_id');
-  var firstName  = localStorage.getItem('guvi_first_name') || '';
-  var lastName   = localStorage.getItem('guvi_last_name')  || '';
-  var username   = localStorage.getItem('guvi_username')   || '';
-  var email      = localStorage.getItem('guvi_email')      || '';
+  const token = localStorage.getItem('guvi_token');
 
-  if (!token || !user_id) {
+  // Auth guard — only token in localStorage
+  if (!token) {
     window.location.href = 'login.html';
     return;
   }
 
-  // Fill sidebar
-  $('#navGreet').text('Hello, ' + firstName);
-  $('#sidebarName').text(firstName + ' ' + lastName);
-  $('#sidebarUsername').text('@' + username);
-  $('#sidebarEmail').text(email);
-  $('#avatarInitials').text((firstName.charAt(0) + lastName.charAt(0)).toUpperCase());
-
-  // Fill account info
-  $('#v_first_name').text(firstName);
-  $('#v_last_name').text(lastName);
-  $('#v_username').text('@' + username);
-  $('#v_email').text(email);
-
-  // Load profile from MongoDB
+  // Load everything from DB via profile.php
   $.ajax({
     url: 'php/profile.php?token=' + encodeURIComponent(token),
     type: 'GET',
     dataType: 'json',
     success: function (res) {
-      if (res.redirect) { localStorage.clear(); window.location.href = 'login.html'; return; }
-      if (res.success && res.profile) {
-        var p = res.profile;
+      if (!res.success || res.redirect) {
+        localStorage.clear();
+        window.location.href = 'login.html';
+        return;
+      }
+
+      // User info from MySQL
+      const u = res.user;
+      $('#navGreet').text('Hello, ' + u.first_name);
+      $('#sidebarName').text(u.first_name + ' ' + u.last_name);
+      $('#sidebarUsername').text('@' + u.username);
+      $('#sidebarEmail').text(u.email);
+      $('#avatarInitials').text((u.first_name.charAt(0) + u.last_name.charAt(0)).toUpperCase());
+      $('#v_first_name').text(u.first_name);
+      $('#v_last_name').text(u.last_name);
+      $('#v_username').text('@' + u.username);
+      $('#v_email').text(u.email);
+
+      // Profile details from MongoDB
+      if (res.profile) {
+        const p = res.profile;
         $('#v_age').text(p.age     || '—');
         $('#v_dob').text(p.dob     || '—');
         $('#v_contact').text(p.contact || '—');
         $('#v_gender').text(p.gender   || '—');
         $('#v_address').text(p.address || '—');
+        // Pre-fill edit form
         $('#age').val(p.age     || '');
         $('#dob').val(p.dob     || '');
         $('#contact').val(p.contact || '');
@@ -46,17 +48,26 @@ $(document).ready(function () {
         $('#address').val(p.address || '');
       }
     },
-    error: function () { showMsg('error', 'Could not load profile data.'); }
+    error: function () {
+      showMsg('error', 'Could not load profile. Please try again.');
+    }
   });
 
   // Edit / Cancel
-  $('#editBtn').click(function () { $('#viewMode').hide(); $('#editMode').show(); });
-  $('#cancelBtn').click(function () { $('#editMode').hide(); $('#viewMode').show(); });
+  $('#editBtn').click(function () {
+    $('#viewMode').hide();
+    $('#editMode').show();
+  });
+
+  $('#cancelBtn').click(function () {
+    $('#editMode').hide();
+    $('#viewMode').show();
+  });
 
   // Save
   $('#saveBtn').click(function () {
-    var payload = {
-      token:   token,
+    const payload = {
+      token,
       age:     $('#age').val().trim(),
       dob:     $('#dob').val(),
       contact: $('#contact').val().trim(),
@@ -105,17 +116,21 @@ $(document).ready(function () {
       url: 'php/login.php',
       type: 'POST',
       contentType: 'application/json',
-      data: JSON.stringify({ action: 'logout', token: token }),
-      complete: function () { localStorage.clear(); window.location.href = 'login.html'; }
+      data: JSON.stringify({ action: 'logout', token }),
+      complete: function () {
+        localStorage.clear();
+        window.location.href = 'login.html';
+      }
     });
   }
   $('#logoutBtn').click(doLogout);
 
   function showMsg(type, text) {
-    $('#msgProfile').removeClass('alert-success alert-error show')
+    $('#msgProfile')
+      .removeClass('alert-success alert-error show')
       .addClass('alert-' + (type === 'success' ? 'success' : 'error') + ' show')
       .text(text);
-    setTimeout(function () { $('#msgProfile').removeClass('show'); }, 3000);
+    setTimeout(() => { $('#msgProfile').removeClass('show'); }, 3000);
   }
 
 });
