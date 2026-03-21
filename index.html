@@ -3,92 +3,38 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>GUVI — Welcome</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+  <title>GUVI — Next Gen Platform</title>
   <link rel="stylesheet" href="css/style.css"/>
-  <style>
-    .hero-wrap {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      position: relative;
-      z-index: 1;
-      padding: 20px;
-    }
-    .hero-inner { max-width: 600px; animation: fadeUp 0.8s ease both; }
-    .big-logo {
-      font-family: 'Syne', sans-serif;
-      font-size: 64px;
-      font-weight: 800;
-      background: linear-gradient(135deg, #6c63ff, #ff6584, #43e97b);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 16px;
-      letter-spacing: 4px;
-    }
-    .hero-inner h1 {
-      font-family: 'Syne', sans-serif;
-      font-size: 32px;
-      font-weight: 700;
-      color: #f0f0f8;
-      margin-bottom: 14px;
-    }
-    .hero-inner p {
-      font-size: 16px;
-      color: #8888aa;
-      margin-bottom: 36px;
-      line-height: 1.7;
-    }
-    .hero-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-    .btn-hero-main {
-      padding: 14px 36px;
-      background: linear-gradient(135deg, #6c63ff, #8b85ff);
-      border: none;
-      border-radius: 10px;
-      color: #fff;
-      font-family: 'Syne', sans-serif;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      text-decoration: none;
-      transition: all 0.2s;
-    }
-    .btn-hero-main:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(108,99,255,0.4); color: #fff; }
-    .btn-hero-outline {
-      padding: 14px 36px;
-      background: transparent;
-      border: 1px solid rgba(108,99,255,0.4);
-      border-radius: 10px;
-      color: #6c63ff;
-      font-family: 'Syne', sans-serif;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      text-decoration: none;
-      transition: all 0.2s;
-    }
-    .btn-hero-outline:hover { background: rgba(108,99,255,0.08); color: #6c63ff; }
-  </style>
 </head>
 <body>
-
-  <div class="orb orb1"></div>
-  <div class="orb orb2"></div>
-  <div class="orb orb3"></div>
-
-  <div class="hero-wrap">
-    <div class="hero-inner">
-      <div class="big-logo">GUVI</div>
-      <h1>Your Learning Journey Starts Here</h1>
-      <p>Register to create your account and login to access your personalized profile. Manage your details all in one place.</p>
-      <div class="hero-btns">
-        <a href="register.html" class="btn-hero-main">Get Started</a>
-        <a href="login.html" class="btn-hero-outline">Sign In</a>
-      </div>
+  <nav class="navbar">
+    <div class="nav-logo">G<em>U</em>VI</div>
+    <div class="nav-right">
+      <span class="nav-pill">v2.0 · 2026</span>
+      <a href="login.html" class="nav-btn">Sign In</a>
     </div>
+  </nav>
+
+  <div class="index-wrap">
+    <div class="index-badge"><div class="dot-live"></div> Platform Live</div>
+    <h1 class="index-h1">
+      <span class="h1-solid">Build</span>
+      <span class="h1-outline">Your</span>
+      <span class="h1-glow">Future.</span>
+    </h1>
+    <p class="index-sub">A next-generation platform engineered for modern learners. Secure accounts, rich profiles, and a seamless experience.</p>
+    <div class="index-btns">
+      <a href="register.html" class="btn-cta">Get Started</a>
+      <a href="login.html" class="btn-ghost">Sign In</a>
+    </div>
+    <div class="index-stats">
+      <div class="stat"><span class="stat-n">10<b>K</b>+</span><span class="stat-l">Users</span></div>
+      <div class="stat"><span class="stat-n">99<b>%</b></span><span class="stat-l">Uptime</span></div>
+      <div class="stat"><span class="stat-n">3<b>x</b></span><span class="stat-l">Faster</span></div>
+    </div>
+    <div class="scroll-hint"><div class="scroll-line"></div><span>Scroll</span></div>
   </div>
-<script src="js/effects.js"></script>
+
+  <script src="js/effects.js"></script>
 </body>
 </html>

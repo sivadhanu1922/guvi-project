@@ -8,62 +8,98 @@
   <link rel="stylesheet" href="css/style.css"/>
 </head>
 <body>
-
-  <div class="orb orb1"></div>
-  <div class="orb orb2"></div>
-  <div class="orb orb3"></div>
-
   <nav class="navbar">
-    <div class="nav-logo">GUVI</div>
-    <a href="login.html" class="nav-link">Already have an account? <span>Sign in</span></a>
+    <div class="nav-logo">G<em>U</em>VI</div>
+    <div class="nav-right">
+      <span class="nav-pill">Already have an account?</span>
+      <a href="login.html" class="nav-btn">Sign In</a>
+    </div>
   </nav>
 
   <div class="page-wrap">
-    <div class="auth-card">
-      <div class="auth-badge">Get Started</div>
-      <h2>Create Account</h2>
-      <p>Join GUVI and start your journey today</p>
-
-      <div id="msg" class="alert-box"></div>
-
-      <div class="row g-3">
-        <div class="col-6">
-          <label class="form-label">First Name</label>
-          <input type="text" class="form-control" id="first_name" placeholder="John"/>
+    <div class="auth-split">
+      <!-- DECO -->
+      <div class="auth-deco">
+        <div class="deco-logo">GUVI · Platform</div>
+        <div class="deco-mid">
+          <div class="deco-big-num">01</div>
+          <div class="deco-heading">Create your<br/><em>account.</em></div>
+          <div class="deco-desc">Join thousands of learners. Your data is encrypted, sessions secured with Redis, and profile stored in MongoDB.</div>
         </div>
-        <div class="col-6">
-          <label class="form-label">Last Name</label>
-          <input type="text" class="form-control" id="last_name" placeholder="Doe"/>
-        </div>
-        <div class="col-12">
-          <label class="form-label">Username</label>
-          <input type="text" class="form-control" id="username" placeholder="johndoe"/>
-        </div>
-        <div class="col-12">
-          <label class="form-label">Email Address</label>
-          <input type="email" class="form-control" id="email" placeholder="john@example.com"/>
-        </div>
-        <div class="col-12">
-          <label class="form-label">Password</label>
-          <input type="password" class="form-control" id="password" placeholder="••••••••"/>
-        </div>
-        <div class="col-12">
-          <label class="form-label">Confirm Password</label>
-          <input type="password" class="form-control" id="confirm_password" placeholder="••••••••"/>
-        </div>
-        <div class="col-12">
-          <button class="btn-main" id="registerBtn">Create Account</button>
+        <div class="deco-tags">
+          <span class="deco-tag lit">Encrypted</span>
+          <span class="deco-tag lit">Redis Sessions</span>
+          <span class="deco-tag">MongoDB</span>
+          <span class="deco-tag">MySQL</span>
         </div>
       </div>
 
-      <div class="auth-bottom">
-        Already registered? <a href="login.html">Sign in here</a>
+      <!-- FORM -->
+      <div class="auth-form-panel">
+        <div class="form-eyebrow">// step_01 · register</div>
+        <div class="form-title">Create Account</div>
+        <div class="form-subtitle">Fill in your details to get started for free</div>
+
+        <div id="msg" class="alert-box"></div>
+
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label">First Name</label>
+            <div class="field-wrap">
+              <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="#00d2ff" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+              <input type="text" class="form-control" id="first_name" placeholder="John"/>
+            </div>
+          </div>
+          <div class="field">
+            <label class="field-label">Last Name</label>
+            <div class="field-wrap">
+              <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="#00d2ff" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+              <input type="text" class="form-control" id="last_name" placeholder="Doe"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label">Username</label>
+          <div class="field-wrap">
+            <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="#00d2ff" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <input type="text" class="form-control" id="username" placeholder="johndoe_"/>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label">Email Address</label>
+          <div class="field-wrap">
+            <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="#00d2ff" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            <input type="email" class="form-control" id="email" placeholder="john@example.com"/>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label">Password</label>
+            <div class="field-wrap">
+              <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="#00d2ff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input type="password" class="form-control" id="password" placeholder="••••••••"/>
+            </div>
+          </div>
+          <div class="field">
+            <label class="field-label">Confirm Password</label>
+            <div class="field-wrap">
+              <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="#00d2ff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input type="password" class="form-control" id="confirm_password" placeholder="••••••••"/>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-submit" id="registerBtn">Create Account</button>
+        <div class="auth-footer">Already registered? <a href="login.html">Sign in here</a></div>
       </div>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-  <script src="js/register.js"></script>
   <script src="js/effects.js"></script>
+  <script src="js/register.js"></script>
 </body>
 </html>
